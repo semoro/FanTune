@@ -36,6 +36,7 @@ double FanCurve::targetRPM(double p) {
     return (maxRPM - minRPM) * p + minRPM;
 }
 
+
 int FanCurve::pwmFromValue(double p) {
     double target = targetRPM(p);
     if (target == 0)
@@ -56,6 +57,21 @@ int FanCurve::pwmFromValue(double p) {
         return low * PWM_STEP;
     return low * PWM_STEP + (int) round((target - RPMs[low]) / step);
 }
+
+
+int FanCurve::rpmFromPwm(int pwm) {
+
+    int low, high;
+    low = pwm / PWM_STEP;
+    high = std::min((pwm + PWM_STEP) / PWM_STEP, CURVE_POINTS - 1);
+    double step = (RPMs[high] - RPMs[low]) / PWM_STEP;
+    if (step == 0)
+        return RPMs[low];
+    int ppwm = pwm % PWM_STEP;
+    return ((PWM_STEP - ppwm) * RPMs[low] + ppwm * RPMs[high]) / PWM_STEP;
+}
+
+
 
 
 

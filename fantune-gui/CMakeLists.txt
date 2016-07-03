@@ -15,6 +15,6 @@ include_directories(includes ${QCUSTOMPLOT_INCLUDE_DIRS})
 
 
 add_executable(fantune-gui ${HEADERS} ${CPP_FILES})
-
+target_link_libraries(fantune-gui fantune)
 target_link_libraries(fantune-gui ${QCUSTOMPLOT_LIBRARY})
 qt5_use_modules(fantune-gui Widgets)

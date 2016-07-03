@@ -30,6 +30,8 @@ public:
 
     void load(std::fstream &in);
 
+    int rpmFromPwm(int pwm);
+
     int pwmFromValue(double p);
 
     void fill(int *RPMs, int minRPM, int maxRPM, int startPWM);
