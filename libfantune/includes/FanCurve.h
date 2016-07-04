@@ -5,7 +5,7 @@
 #ifndef FANTUNE_FANCURVE_H
 #define FANTUNE_FANCURVE_H
 
-#include <jmorecfg.h>
+
 #include <fstream>
 #include "Fan.h"
 

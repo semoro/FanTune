@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
     MainWindow window;
     // setup customPlot as central widget of window:
     QCustomPlot customPlot;
-    window.setCentralWidget(&customPlot);
+    //window.setCentralWidget(&customPlot);
     FanCurve fanCurve;
     std::fstream config("curve_outtake.conf", std::ios::in);
     fanCurve.load(config);

@@ -2,7 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QHBoxLayout>
 #include "Fan.h"
+#include "FansScrollArea.h"
 
 namespace Ui {
     class MainWindow;
@@ -11,8 +13,7 @@ namespace Ui {
 class MainWindow : public QMainWindow {
 Q_OBJECT
 QVector<Fan> fans;
-QVector<QHBoxLayout*> layouts;
-QVBoxLayout* fansHBoxLayout;
+
 
 
 public:

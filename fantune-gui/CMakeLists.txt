@@ -10,7 +10,7 @@ find_package(Qt5Widgets REQUIRED)
 find_package(QCustomPlot REQUIRED)
 
 set(CPP_FILES src/main.cpp src/mainwindow.cpp src)
-set(HEADERS src/mainwindow.h src/Fan.h)
+set(HEADERS src/mainwindow.h src/Fan.h src/FanRow.h src/FansScrollArea.cpp src/FansScrollArea.h)
 include_directories(includes ${QCUSTOMPLOT_INCLUDE_DIRS})
 
 
