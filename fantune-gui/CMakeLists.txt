@@ -9,9 +9,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}")
 find_package(Qt5Widgets REQUIRED)
 find_package(QCustomPlot REQUIRED)
 
-set(CPP_FILES src/main.cpp src/mainwindow.cpp src)
-set(HEADERS src/mainwindow.h src/Fan.h src/FanRow.h src/FansScrollArea.cpp src/FansScrollArea.h)
-include_directories(includes ${QCUSTOMPLOT_INCLUDE_DIRS})
+set(CPP_FILES src/main.cpp src/mainwindow.cpp)
+set(HEADERS src/mainwindow.h src/Fan.h src/FanRow.h src/FansScrollArea.cpp src/FansScrollArea.h src/settingswidget.cpp src/settingswidget.h src/PlotPoint.cpp src/PlotPoint.h)
+include_directories(${QCUSTOMPLOT_INCLUDE_DIRS})
 
 
 add_executable(fantune-gui ${HEADERS} ${CPP_FILES})

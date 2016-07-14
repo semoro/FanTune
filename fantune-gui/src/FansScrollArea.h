@@ -16,10 +16,12 @@ class FansScrollArea : public QScrollArea
 
 public:
     explicit FansScrollArea(QWidget *parent = 0);
+    QWidget *m_parent;
     ~FansScrollArea();
 
     void addRow(QString FanID, int progressBarValue, QWidget* parent); //Use own parameters
-
+public slots:
+    void openSettingsWindow(QString fanID);
 private:
     QVBoxLayout *mainLayout;
 

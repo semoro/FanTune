@@ -4,10 +4,14 @@
 
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QGroupBox>
+#include <QtWidgets/QPushButton>
+
 #include "FansScrollArea.h"
+#include "settingswidget.h"
 
 
 FansScrollArea::FansScrollArea(QWidget *parent) {
+    m_parent = parent;
     setWidget(new QWidget);
     setWidgetResizable(true);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
@@ -18,6 +22,7 @@ FansScrollArea::FansScrollArea(QWidget *parent) {
 
 
     widget()->setLayout(mainLayout);
+
 
     //mainLayout->addLayout(m_rowLayout);
 
@@ -49,6 +54,10 @@ void FansScrollArea::addRow(QString FanID, int progressBarValue, QWidget* parent
     row.m_ProgressBar = pProgressBar;
     row.m_PushButton = pPushButton;
 
+    connect(row.m_PushButton, &QPushButton::clicked, [&row, this](){
+        openSettingsWindow(m_FanRows.last().m_GroupBox->title());
+    });
+
     //row.m_GroupBox->setLayout(m_rowLayout);
 
     m_FanRows.push_back(row);
@@ -57,6 +66,14 @@ void FansScrollArea::addRow(QString FanID, int progressBarValue, QWidget* parent
 FansScrollArea::~FansScrollArea() {
 
 }
+
+void FansScrollArea::openSettingsWindow(QString fanID) {
+    SettingsWidget *settingsWidget = new SettingsWidget(fanID);
+    settingsWidget->show();
+    settingsWidget->setAttribute(Qt::WA_DeleteOnClose);
+}
+
+
 
 
 
