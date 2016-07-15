@@ -17,7 +17,7 @@ void Fan::setPWM(int p) {
 
 
 void Fan::update() {
-    rpm = (int) (strtol(getAttr(monitorPath, "%s_input"), 0, 10));
+    rpm = (int) (strtol(getAttr(monitorPath, "%s"), 0, 10));
 }
 
 void Fan::setManual(bool manual) {

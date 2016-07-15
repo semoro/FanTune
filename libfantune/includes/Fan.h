@@ -13,8 +13,7 @@ class Fan {
 
 
 private:
-    const char *monitorPath;
-    const char *controlPath;
+
     char buf[4096];
     int controlMode;
 
@@ -24,6 +23,8 @@ private:
 
 
 public:
+    const char *monitorPath;
+    const char *controlPath;
 
     void setPWM(int p);
 
