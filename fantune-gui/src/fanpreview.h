@@ -23,6 +23,8 @@ private:
 public slots:
 
     void updateFanInfo();
+
+    void openSettings();
 };
 
 #endif // FANPREVIEW_H

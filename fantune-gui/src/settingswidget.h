@@ -2,6 +2,7 @@
 #define SETTINGSWIDGET_H
 
 #include <QWidget>
+#include <Fan.h>
 #include "PlotPoint.h"
 
 namespace Ui {
@@ -28,7 +29,8 @@ class SettingsWidget : public QWidget
 
 public:
     explicit SettingsWidget(QWidget *parent = 0);
-    explicit SettingsWidget(QString fanID, QWidget *parent = 0);
+
+    explicit SettingsWidget(Fan *fan, QWidget *parent = 0);
     void addPoint();
     void repaintGraph();
     ~SettingsWidget();
