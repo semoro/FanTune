@@ -13,7 +13,7 @@ void stopFan(Fan *fan) {
 }
 
 
-FanCurve *FanTest::techCurve(Fan *fan) {
+FanCurve *FanTest::techCurve(Fan *fan, ProgressCallback callback) {
     timespec tw{2, 100 * 1000 * 1000};
     timespec tv;
     stopFan(fan);
@@ -26,7 +26,9 @@ FanCurve *FanTest::techCurve(Fan *fan) {
         nanosleep(&tw, &tv);
         RPMs[i] = fan->getRPM();
         printf("%d%%,\t PWM: %d,\t RPM: %d\n", (int) (i / 52.0 * 100.0), i * PWM_STEP, fan->rpm);
+        callback(i / 52.0);
     }
+    callback(1);
     int maxRPM = fan->rpm;
     printf("[LOG] Done.\n");
 

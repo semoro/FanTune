@@ -3,7 +3,6 @@
 #include "settingswidget.h"
 #include "ui_settingswidget.h"
 #include "../../libfantune/includes/FanCurve.h"
-#include "PlotPoint.h"
 
 SettingsWidget::SettingsWidget(QWidget *parent) :
         QWidget(parent),
@@ -16,34 +15,36 @@ SettingsWidget::~SettingsWidget() {
     delete ui;
 }
 
-SettingsWidget::SettingsWidget(QString fanID, QWidget *parent) :
+SettingsWidget::SettingsWidget(Fan *fan, QWidget *parent) :
         QWidget(parent),
         ui(new Ui::SettingsWidget) {
     ui->setupUi(this);
-    ui->labelFanID->setText(fanID);
-    setWindowTitle(fanID);
 
-    /*   QCustomPlot* customPlot = ui->widget;
-       // create plot (from quadratic plot example):
-       FanCurve fanCurve;
-       std::fstream config("curve_outtake.conf", std::ios::in);
-       fanCurve.load(config);
-       config.close();
-       // create plot (from quadratic plot example):
-       rpmP = new QVector<double>(256);
-       x = new QVector<double>(256);
-       for (int i = 0; i < 256; ++i) {
-           (*rpmP)[i] = fanCurve.rpmFromPwm(i);
-           (*x)[i] = i;
-       }
+    setWindowTitle(fan->monitorPath);
 
-       customPlot->addGraph();
-       customPlot->graph(0)->setData(*x, *rpmP);
-       customPlot->xAxis->setLabel("x");
-       customPlot->yAxis->setLabel("y");
-       customPlot->rescaleAxes();
-   */
-    customPlot = ui->widget;
+    {
+        QCustomPlot *customPlot = ui->fanCurveDisplay;
+
+        FanCurve fanCurve;
+        std::fstream config("curve_outtake.conf", std::ios::in);
+        fanCurve.load(config);
+        config.close();
+
+        rpmP = new QVector<double>(256);
+        x = new QVector<double>(256);
+        for (int i = 0; i < 256; ++i) {
+            (*rpmP)[i] = fanCurve.rpmFromPwm(i);
+            (*x)[i] = i;
+        }
+
+        customPlot->addGraph();
+        customPlot->graph(0)->setData(*x, *rpmP);
+        customPlot->xAxis->setLabel("PWM");
+        customPlot->yAxis->setLabel("RPM");
+        customPlot->rescaleAxes();
+    }
+
+    customPlot = ui->controlCurveEdit;
     currentState = new PlotPoint(customPlot);
 
 
@@ -119,17 +120,16 @@ SettingsWidget::SettingsWidget(QString fanID, QWidget *parent) :
     connect(ui->pushButton_addPoint, &QPushButton::clicked, this, &SettingsWidget::addPoint);
 
 
-
 }
 
 void SettingsWidget::addPoint() {
     double x, y;
-    x = ((*pointsX)[1] + (*pointsX)[2])/2;
-    y = ((*pointsY)[1] + (*pointsY)[2])/2;
+    x = ((*pointsX)[1] + (*pointsX)[2]) / 2;
+    y = ((*pointsY)[1] + (*pointsY)[2]) / 2;
     pointsX->insert(2, 1, x);
     pointsY->insert(2, 1, y);
 
-    pointsMarks->insert(2,1, new PlotPoint(customPlot));
+    pointsMarks->insert(2, 1, new PlotPoint(customPlot));
     (*pointsMarks)[2]->moveCenter((*pointsX)[2], (*pointsY)[2]);
     (*pointsMarks)[2]->setBrush(QBrush(Qt::black));
 
@@ -161,17 +161,17 @@ void SettingsWidget::dragPoint(QMouseEvent *event) {
         checkX = customPlot->xAxis->pixelToCoord(event->localPos().x());
         checkY = customPlot->yAxis->pixelToCoord(event->localPos().y());
 
-        if(currentState->index() == (*pointsX).size() - 1){
+        if (currentState->index() == (*pointsX).size() - 1) {
             x = 100;
-        } else if(currentState->index() == 0){
+        } else if (currentState->index() == 0) {
             x = 0;
-        } else{
-            if(checkX >= 0 && checkX <= 100) {
+        } else {
+            if (checkX >= 0 && checkX <= 100) {
                 x = customPlot->xAxis->pixelToCoord(event->localPos().x());
             }
         }
 
-        if(checkY >= 0 && checkY <= 100){
+        if (checkY >= 0 && checkY <= 100) {
             y = customPlot->yAxis->pixelToCoord(event->localPos().y());
         }
 
@@ -185,6 +185,10 @@ void SettingsWidget::dragPoint(QMouseEvent *event) {
     }
 
 }
+
+
+
+
 
 
 

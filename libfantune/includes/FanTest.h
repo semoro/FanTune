@@ -13,9 +13,11 @@ typedef struct {
     double targetRPM;
 } CurveTestRecord;
 
+typedef void (*ProgressCallback)(double);
+
 class FanTest {
 public:
-    FanCurve *techCurve(Fan *fan);
+    FanCurve *techCurve(Fan *fan, ProgressCallback callback);
 
     CurveTestRecord *testCurve(Fan *fan, FanCurve *curve);
 };

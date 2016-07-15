@@ -1,6 +1,8 @@
 #include <qcustomplot.h>
+#include <FanSelector.h>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "fanpreview.h"
 
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
@@ -8,23 +10,22 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     setWindowTitle("Fan Tune GNU");
-    //TODO get fans to vector
-    fans.push_back(Fan{"Fan 001", 1488});
-    fans.push_back(Fan{"Fan 002", 228});
-    fans.push_back(Fan{"Fan 003", 228});
-    fans.push_back(Fan{"Fan 004", 228});
-    fans.push_back(Fan{"Fan 005", 228});
-    fans.push_back(Fan{"Fan 006", 228});
 
-    FansScrollArea* fansArea = new FansScrollArea(this);
+    FanSelector fanSelector;
+
+    fans = QVector<Fan *>::fromStdVector(fanSelector.detectFans());
+    QVBoxLayout *wL = (QVBoxLayout *) ui->scrollAreaWidgetContents->layout();
+    //ui->scrollAreaWidgetContents->setWidth();
     for (int i = 0; i < fans.size(); ++i) {
-        fansArea->addRow(fans[i].fanID, fans[i].RPM, fansArea);
+        FanPreview *fanPreview = new FanPreview(fans[i], ui->scrollAreaWidgetContents);
+        wL->addWidget(fanPreview);
+        connect(this, &MainWindow::updateFanInfo, fanPreview, &FanPreview::updateFanInfo);
     }
 
 
-    ui->initVerticalLayout->addWidget(fansArea);
-
-
+    fanUpdate = new QTimer(this);
+    connect(fanUpdate, SIGNAL(timeout()), this, SLOT(updateFans()));
+    fanUpdate->start(1000);
 }
 
 MainWindow::~MainWindow() {
@@ -35,5 +36,11 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     QWidget::closeEvent(event);
     QApplication::quit();
 }
+
+void MainWindow::updateFans() {
+    emit updateFanInfo();
+}
+
+
 
 
