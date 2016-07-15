@@ -86,9 +86,9 @@ vector<Fan *> FanSelector::detectFans() {
 
     for (auto iter = result.begin(); iter != result.end(); ++iter) {
         Fan *fan = *iter;
-
         if (fan->getRPM() == 0) {
             iter = result.erase(iter);
+            --iter;
             delete fan;
         } else {
             printf("MON: %s\tPWM: %s\n", fan->monitorPath, fan->controlPath);

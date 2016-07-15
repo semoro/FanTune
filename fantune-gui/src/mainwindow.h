@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QHBoxLayout>
 #include "Fan.h"
-#include "FansScrollArea.h"
 
 namespace Ui {
     class MainWindow;
@@ -12,8 +11,8 @@ namespace Ui {
 
 class MainWindow : public QMainWindow {
 Q_OBJECT
-QVector<Fan> fans;
-
+    QVector<Fan *> fans;
+    QTimer *fanUpdate;
 
 
 public:
@@ -29,6 +28,11 @@ private:
 
 public slots:
 
+    void updateFans();
+
+signals:
+
+    void updateFanInfo();
 };
 
 #endif // MAINWINDOW_H
