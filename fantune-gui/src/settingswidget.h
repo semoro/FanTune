@@ -32,12 +32,14 @@ public:
 
     explicit SettingsWidget(Fan *fan, QWidget *parent = 0);
     void addPoint();
-    void repaintGraph();
+    void setGraphToAuto();
     ~SettingsWidget();
 public slots:
     void dragPointFlag(QMouseEvent *event);
     void dragPoint(QMouseEvent *event);
 private:
+    void initSettingsGraph();
+    void initFanCurveGraph();
     Ui::SettingsWidget *ui;
 };
 
