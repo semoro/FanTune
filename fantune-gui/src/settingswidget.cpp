@@ -67,6 +67,7 @@ void SettingsWidget::dragPointFlag(QMouseEvent *event) {
                     customPlot->replot();
                     dragFlag = true;
                     (*currentState).setIndex(i);
+                    //TODO Check point mark center position collision.
                 }
             }
         }
@@ -76,7 +77,8 @@ void SettingsWidget::dragPointFlag(QMouseEvent *event) {
 
 void SettingsWidget::dragPoint(QMouseEvent *event) {
     if (dragFlag) {
-        double x, y, checkX, checkY;
+        double x, y, checkX, checkY, leftX = 0, rightX = 100;
+        int i = (*currentState).index();
         checkX = customPlot->xAxis->pixelToCoord(event->localPos().x());
         checkY = customPlot->yAxis->pixelToCoord(event->localPos().y());
 
@@ -85,7 +87,11 @@ void SettingsWidget::dragPoint(QMouseEvent *event) {
         } else if (currentState->index() == 0) {
             x = 0;
         } else {
-            if (checkX >= 0 && checkX <= 100) {
+            if(i>0)
+                leftX = (*pointsX)[i-1];
+            if(i < (*pointsX).size() - 1)
+                rightX = (*pointsX)[i+1];
+            if (checkX > leftX && checkX < rightX) {
                 x = customPlot->xAxis->pixelToCoord(event->localPos().x());
             }
         }
@@ -93,16 +99,13 @@ void SettingsWidget::dragPoint(QMouseEvent *event) {
         if (checkY >= 0 && checkY <= 100) {
             y = customPlot->yAxis->pixelToCoord(event->localPos().y());
         }
-
         cPos = QPointF(x, y);
-        int i = (*currentState).index();
         (*pointsX).replace(i, cPos.x());
         (*pointsY).replace(i, cPos.y());
         current->moveCenter(cPos.x(), cPos.y());
         customPlot->graph(0)->setData(*pointsX, *pointsY);
         customPlot->replot();
     }
-
 }
 
 void SettingsWidget::setGraphToAuto() {
