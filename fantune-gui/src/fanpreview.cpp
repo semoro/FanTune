@@ -13,6 +13,7 @@ FanPreview::FanPreview(Fan *fan, QWidget *parent) :
     ui->groupBox->setTitle(fan->monitorPath);
 
     connect(ui->pushButton, &QPushButton::clicked, this, &FanPreview::openSettings);
+    connect(ui->horizontalSlider, &QSlider::sliderPressed, this, &FanPreview::toggleSwitch);
 }
 
 void FanPreview::updateFanInfo() {
@@ -26,6 +27,23 @@ void FanPreview::openSettings() {
     settingsWidget->show();
     settingsWidget->setAttribute(Qt::WA_DeleteOnClose);
 }
+
+void FanPreview::toggleSwitch() {
+
+    if(ui->horizontalSlider->value() == 0) {
+        ui->horizontalSlider->setValue(1);
+
+    }
+    else {
+        ui->horizontalSlider->setValue(0);
+
+    }
+}
+
+
+
+
+
 
 
 
