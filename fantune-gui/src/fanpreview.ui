@@ -45,6 +45,69 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="currRPM">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QSlider" name="horizontalSlider">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>35</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>50</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QSlider::groove:horizontal {
+    background: red;
+    position: absolute; /* absolutely position 4px from the left and right of the widget. setting margins on the widget should work too... */
+    left: 4px; right: 4px;
+}
+
+QSlider::handle:horizontal {
+	width: 15px;
+    background: black;
+    margin: 0 -4px; /* expand outside the groove */
+}
+
+QSlider::add-page:horizontal {
+    background: gray;
+}
+
+QSlider::sub-page:horizontal {
+    background: green;
+}</string>
+        </property>
+        <property name="maximum">
+         <number>1</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>Settings</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="2">
        <spacer name="horizontalSpacer">
         <property name="orientation">
@@ -58,17 +121,10 @@
         </property>
        </spacer>
       </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="currRPM">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="3">
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QLabel" name="label">
         <property name="text">
-         <string>Settings</string>
+         <string>Manual mode</string>
         </property>
        </widget>
       </item>
