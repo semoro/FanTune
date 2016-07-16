@@ -23,7 +23,6 @@ private:
 public slots:
     void toggleSwitch();
     void updateFanInfo();
-    void setStyles();
 
     void openSettings();
 };
