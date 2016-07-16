@@ -129,53 +129,12 @@ void SettingsWidget::setGraphToAuto() {
     (*pointsY)[2] = 50;
     (*pointsY)[3] = 80;
 
-
-    customPlot->addGraph();
     customPlot->graph(0)->setData(*pointsX, *pointsY);
-    customPlot->graph(0)->setPen(QPen(QBrush(QColor(graphColor)), 3));
-
     for (int i = 0; i < (*pointsX).size(); ++i) {
         (*pointsMarks)[i] = new PlotPoint(customPlot);
         (*pointsMarks)[i]->moveCenter((*pointsX)[i], (*pointsY)[i]);
         (*pointsMarks)[i]->setBrush(QBrush(defaultColor));
     }
-
-    customPlot->xAxis->setLabel("°C");
-    customPlot->xAxis->setRange(0, 100);
-    customPlot->yAxis->setLabel("%");
-    customPlot->yAxis->setRange(0, 100);
-
-
-    customPlot->xAxis->setBasePen(QPen(Qt::white, 1));
-    customPlot->yAxis->setBasePen(QPen(Qt::white, 1));
-    customPlot->xAxis->setTickPen(QPen(Qt::white, 1));
-    customPlot->yAxis->setTickPen(QPen(Qt::white, 1));
-    customPlot->xAxis->setSubTickPen(QPen(Qt::white, 1));
-    customPlot->yAxis->setSubTickPen(QPen(Qt::white, 1));
-    customPlot->xAxis->setTickLabelColor(Qt::white);
-    customPlot->yAxis->setTickLabelColor(Qt::white);
-    customPlot->xAxis->grid()->setPen(QPen(QColor(140, 140, 140), 1, Qt::DotLine));
-    customPlot->yAxis->grid()->setPen(QPen(QColor(140, 140, 140), 1, Qt::DotLine));
-    customPlot->xAxis->grid()->setSubGridPen(QPen(QColor(80, 80, 80), 1, Qt::DotLine));
-    customPlot->yAxis->grid()->setSubGridPen(QPen(QColor(80, 80, 80), 1, Qt::DotLine));
-    customPlot->xAxis->grid()->setSubGridVisible(true);
-    customPlot->yAxis->grid()->setSubGridVisible(true);
-    customPlot->xAxis->grid()->setZeroLinePen(Qt::NoPen);
-    customPlot->yAxis->grid()->setZeroLinePen(Qt::NoPen);
-    customPlot->xAxis->setUpperEnding(QCPLineEnding::esSpikeArrow);
-    customPlot->yAxis->setUpperEnding(QCPLineEnding::esSpikeArrow);
-    QLinearGradient plotGradient;
-    plotGradient.setStart(0, 0);
-    plotGradient.setFinalStop(0, 350);
-    plotGradient.setColorAt(0, QColor(80, 80, 80));
-    plotGradient.setColorAt(1, QColor(50, 50, 50));
-    customPlot->setBackground(plotGradient);
-    QLinearGradient axisRectGradient;
-    axisRectGradient.setStart(0, 0);
-    axisRectGradient.setFinalStop(0, 350);
-    axisRectGradient.setColorAt(0, QColor(80, 80, 80));
-    axisRectGradient.setColorAt(1, QColor(30, 30, 30));
-    customPlot->axisRect()->setBackground(axisRectGradient);
     customPlot->replot();
 }
 
@@ -198,8 +157,6 @@ void SettingsWidget::initSettingsGraph() {
     (*pointsY)[2] = 50;
     (*pointsY)[3] = 80;
 
-
-
     customPlot->addGraph();
     customPlot->graph(0)->setData(*pointsX, *pointsY);
     customPlot->graph(0)->setPen(QPen(QBrush(QColor(graphColor)), 3));
@@ -211,10 +168,11 @@ void SettingsWidget::initSettingsGraph() {
     }
 
     customPlot->xAxis->setLabel("°C");
+    customPlot->xAxis->setLabelColor(Qt::white);
     customPlot->xAxis->setRange(0, 100);
     customPlot->yAxis->setLabel("%");
+    customPlot->yAxis->setLabelColor(Qt::white);
     customPlot->yAxis->setRange(0, 100);
-
 
     customPlot->xAxis->setBasePen(QPen(Qt::white, 1));
     customPlot->yAxis->setBasePen(QPen(Qt::white, 1));
@@ -265,9 +223,45 @@ void SettingsWidget::initFanCurveGraph() {
 
     customPlot->addGraph();
     customPlot->graph(0)->setData(*x, *rpmP);
+    customPlot->graph(0)->setPen(QPen(QBrush(QColor(graphColor)), 3));
     customPlot->xAxis->setLabel("PWM");
+    customPlot->xAxis->setLabelColor(Qt::white);
     customPlot->yAxis->setLabel("RPM");
+    customPlot->yAxis->setLabelColor(Qt::white);
     customPlot->rescaleAxes();
+
+
+
+    customPlot->xAxis->setBasePen(QPen(Qt::white, 1));
+    customPlot->yAxis->setBasePen(QPen(Qt::white, 1));
+    customPlot->xAxis->setTickPen(QPen(Qt::white, 1));
+    customPlot->yAxis->setTickPen(QPen(Qt::white, 1));
+    customPlot->xAxis->setSubTickPen(QPen(Qt::white, 1));
+    customPlot->yAxis->setSubTickPen(QPen(Qt::white, 1));
+    customPlot->xAxis->setTickLabelColor(Qt::white);
+    customPlot->yAxis->setTickLabelColor(Qt::white);
+    customPlot->xAxis->grid()->setPen(QPen(QColor(140, 140, 140), 1, Qt::DotLine));
+    customPlot->yAxis->grid()->setPen(QPen(QColor(140, 140, 140), 1, Qt::DotLine));
+    customPlot->xAxis->grid()->setSubGridPen(QPen(QColor(80, 80, 80), 1, Qt::DotLine));
+    customPlot->yAxis->grid()->setSubGridPen(QPen(QColor(80, 80, 80), 1, Qt::DotLine));
+    customPlot->xAxis->grid()->setSubGridVisible(true);
+    customPlot->yAxis->grid()->setSubGridVisible(true);
+    customPlot->xAxis->grid()->setZeroLinePen(Qt::NoPen);
+    customPlot->yAxis->grid()->setZeroLinePen(Qt::NoPen);
+    customPlot->xAxis->setUpperEnding(QCPLineEnding::esSpikeArrow);
+    customPlot->yAxis->setUpperEnding(QCPLineEnding::esSpikeArrow);
+    QLinearGradient plotGradient;
+    plotGradient.setStart(0, 0);
+    plotGradient.setFinalStop(0, 350);
+    plotGradient.setColorAt(0, QColor(80, 80, 80));
+    plotGradient.setColorAt(1, QColor(50, 50, 50));
+    customPlot->setBackground(plotGradient);
+    QLinearGradient axisRectGradient;
+    axisRectGradient.setStart(0, 0);
+    axisRectGradient.setFinalStop(0, 350);
+    axisRectGradient.setColorAt(0, QColor(80, 80, 80));
+    axisRectGradient.setColorAt(1, QColor(30, 30, 30));
+    customPlot->axisRect()->setBackground(axisRectGradient);
 }
 
 
