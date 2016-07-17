@@ -2,7 +2,7 @@
 #include <iostream>
 #include "settingswidget.h"
 #include "ui_settingswidget.h"
-#include "../../libfantune/includes/FanCurve.h"
+
 
 SettingsWidget::SettingsWidget(QWidget *parent) :
         QWidget(parent),
@@ -29,7 +29,7 @@ SettingsWidget::SettingsWidget(Fan *fan, QWidget *parent) :
     connect(customPlot, &QCustomPlot::mouseMove, this, &SettingsWidget::dragPoint);
     connect(customPlot, &QCustomPlot::mouseRelease, [this]() {
         dragFlag = false;
-        if(current)
+        if (current)
             current->setBrush(QBrush(defaultColor));
         customPlot->replot();
     });
@@ -87,10 +87,10 @@ void SettingsWidget::dragPoint(QMouseEvent *event) {
         } else if (currentState->index() == 0) {
             x = 0;
         } else {
-            if(i>0)
-                leftX = (*pointsX)[i-1];
-            if(i < (*pointsX).size() - 1)
-                rightX = (*pointsX)[i+1];
+            if (i > 0)
+                leftX = (*pointsX)[i - 1];
+            if (i < (*pointsX).size() - 1)
+                rightX = (*pointsX)[i + 1];
             if (checkX > leftX && checkX < rightX) {
                 x = customPlot->xAxis->pixelToCoord(event->localPos().x());
             }
@@ -191,7 +191,7 @@ void SettingsWidget::initSettingsGraph() {
     pointsY = new QVector<double>(4);
     pointsMarks = new QVector<PlotPoint *>(4);
 
-    (*pointsX)[0] = 0;
+    (*pointsX)[0] = 10;
     (*pointsX)[1] = 40;
     (*pointsX)[2] = 60;
     (*pointsX)[3] = 100;
@@ -200,7 +200,6 @@ void SettingsWidget::initSettingsGraph() {
     (*pointsY)[1] = 20;
     (*pointsY)[2] = 50;
     (*pointsY)[3] = 80;
-
 
 
     customPlot->addGraph();
@@ -254,7 +253,7 @@ void SettingsWidget::initSettingsGraph() {
 void SettingsWidget::initFanCurveGraph() {
     QCustomPlot *customPlot = ui->fanCurveDisplay;
 
-    FanCurve fanCurve;
+
     std::fstream config("curve_outtake.conf", std::ios::in);
     fanCurve.load(config);
     config.close();

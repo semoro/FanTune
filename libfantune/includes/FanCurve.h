@@ -22,8 +22,21 @@ private:
 public:
     double targetRPM(double p);
 
+
+    int getMinRPM() const {
+        return minRPM;
+    }
+
+    int getMaxRPM() const {
+        return maxRPM;
+    }
+
+    int getStartPWM() const {
+        return startPWM;
+    }
+
     bool isStopable() {
-        return startPWM == 0;
+        return startPWM != 0;
     }
 
     void save(std::fstream &out);
@@ -33,6 +46,8 @@ public:
     int rpmFromPwm(int pwm);
 
     int pwmFromValue(double p);
+
+    double deadZone();
 
     void fill(int *RPMs, int minRPM, int maxRPM, int startPWM);
 };

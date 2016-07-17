@@ -71,6 +71,12 @@ int FanCurve::rpmFromPwm(int pwm) {
     return ((PWM_STEP - ppwm) * RPMs[low] + ppwm * RPMs[high]) / PWM_STEP;
 }
 
+double FanCurve::deadZone() {
+    return ((double) (rpmFromPwm(startPWM) - minRPM)) / (maxRPM - minRPM);
+}
+
+
+
 
 
 

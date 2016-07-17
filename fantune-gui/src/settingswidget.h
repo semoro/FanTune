@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <Fan.h>
 #include "PlotPoint.h"
+#include "FanCurve.h"
 
 namespace Ui {
 class SettingsWidget;
@@ -21,6 +22,7 @@ class SettingsWidget : public QWidget
     QPointF cPos;
     QCustomPlot* customPlot;
     bool dragFlag = false;
+    FanCurve fanCurve;
 
     QColor defaultColor = Qt::lightGray,
     dragColor = Qt::red,
