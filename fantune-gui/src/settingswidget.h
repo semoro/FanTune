@@ -27,6 +27,7 @@ class SettingsWidget : public QWidget
     QColor defaultColor = Qt::lightGray,
     dragColor = Qt::red,
     graphColor = QColor(92, 170, 21);
+    double deadZone;
 
 
 public:
@@ -42,6 +43,7 @@ public slots:
 private:
     void initSettingsGraph();
     void initFanCurveGraph();
+    void initSettingsCommonCode();
     Ui::SettingsWidget *ui;
 };
 
