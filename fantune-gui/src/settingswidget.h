@@ -40,6 +40,7 @@ public slots:
 private:
     void initSettingsGraph();
     void initFanCurveGraph();
+    void getFanCurve();
     Ui::SettingsWidget *ui;
 };
 

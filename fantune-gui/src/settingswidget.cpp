@@ -8,7 +8,6 @@ SettingsWidget::SettingsWidget(QWidget *parent) :
         QWidget(parent),
         ui(new Ui::SettingsWidget) {
     ui->setupUi(this);
-
 }
 
 SettingsWidget::~SettingsWidget() {
@@ -266,6 +265,12 @@ void SettingsWidget::initFanCurveGraph() {
     axisRectGradient.setColorAt(1, QColor(30, 30, 30));
     customPlot->axisRect()->setBackground(axisRectGradient);
 }
+
+void SettingsWidget::getFanCurve() {
+
+}
+
+
 
 
 
