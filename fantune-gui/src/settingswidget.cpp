@@ -22,12 +22,9 @@ SettingsWidget::SettingsWidget(Fan *fan, QWidget *parent) :
 
     setWindowTitle(fan->monitorPath);
 
-
     initFanCurveGraph();
     deadZone = fanCurve.deadZone() * 100;
     initSettingsGraph();
-
-
 
     connect(customPlot, &QCustomPlot::mousePress, this, &SettingsWidget::dragPointFlag);
     connect(customPlot, &QCustomPlot::mouseMove, this, &SettingsWidget::dragPoint);
@@ -112,8 +109,6 @@ void SettingsWidget::dragPoint(QMouseEvent *event) {
         } else if (checkY >= 0 && checkY <= 100) {
             y = customPlot->yAxis->pixelToCoord(event->localPos().y());
         }
-
-
         cPos = QPointF(x, y);
         (*pointsX).replace(i, cPos.x());
         (*pointsY).replace(i, cPos.y());
@@ -175,6 +170,38 @@ void SettingsWidget::initFanCurveGraph() {
     customPlot->xAxis->setLabel("PWM");
     customPlot->yAxis->setLabel("RPM");
     customPlot->rescaleAxes();
+
+    customPlot->xAxis->setBasePen(QPen(Qt::white, 1));
+    customPlot->yAxis->setBasePen(QPen(Qt::white, 1));
+    customPlot->xAxis->setTickPen(QPen(Qt::white, 1));
+    customPlot->yAxis->setTickPen(QPen(Qt::white, 1));
+    customPlot->xAxis->setSubTickPen(QPen(Qt::white, 1));
+    customPlot->yAxis->setSubTickPen(QPen(Qt::white, 1));
+    customPlot->xAxis->setTickLabelColor(Qt::white);
+    customPlot->yAxis->setTickLabelColor(Qt::white);
+    customPlot->xAxis->grid()->setPen(QPen(QColor(140, 140, 140), 1, Qt::DotLine));
+    customPlot->yAxis->grid()->setPen(QPen(QColor(140, 140, 140), 1, Qt::DotLine));
+    customPlot->xAxis->grid()->setSubGridPen(QPen(QColor(80, 80, 80), 1, Qt::DotLine));
+    customPlot->yAxis->grid()->setSubGridPen(QPen(QColor(80, 80, 80), 1, Qt::DotLine));
+    customPlot->xAxis->grid()->setSubGridVisible(true);
+    customPlot->yAxis->grid()->setSubGridVisible(true);
+    customPlot->xAxis->grid()->setZeroLinePen(Qt::NoPen);
+    customPlot->yAxis->grid()->setZeroLinePen(Qt::NoPen);
+    customPlot->xAxis->setUpperEnding(QCPLineEnding::esSpikeArrow);
+    customPlot->yAxis->setUpperEnding(QCPLineEnding::esSpikeArrow);
+    QLinearGradient plotGradient;
+    plotGradient.setStart(0, 0);
+    plotGradient.setFinalStop(0, 350);
+    plotGradient.setColorAt(0, QColor(80, 80, 80));
+    plotGradient.setColorAt(1, QColor(50, 50, 50));
+    customPlot->setBackground(plotGradient);
+    QLinearGradient axisRectGradient;
+    axisRectGradient.setStart(0, 0);
+    axisRectGradient.setFinalStop(0, 350);
+    axisRectGradient.setColorAt(0, QColor(80, 80, 80));
+    axisRectGradient.setColorAt(1, QColor(30, 30, 30));
+    customPlot->axisRect()->setBackground(axisRectGradient);
+
 }
 
 void SettingsWidget::initSettingsCommonCode() {
@@ -204,8 +231,10 @@ void SettingsWidget::initSettingsCommonCode() {
     }
 
     customPlot->xAxis->setLabel("°C");
+    customPlot->xAxis->setLabelColor(Qt::white);
     customPlot->xAxis->setRange(0, 100);
     customPlot->yAxis->setLabel("%");
+    customPlot->yAxis->setLabelColor(Qt::white);
     customPlot->yAxis->setRange(0, 100);
 
 
