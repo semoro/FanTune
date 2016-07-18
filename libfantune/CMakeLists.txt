@@ -1,6 +1,6 @@
 
-set(CPP_FILES src/Fan.cpp src/FanCurve.cpp src/FanTest.cpp src/FanSelector.cpp)
-set(HEADERS includes/Fan.h includes/FanCurve.h includes/FanTest.h includes/FanSelector.h)
+set(CPP_FILES src/Fan.cpp src/FanCurve.cpp src/FanTest.cpp src/FanSelector.cpp src/ControlCurve.cpp)
+set(HEADERS includes/Fan.h includes/FanCurve.h includes/FanTest.h includes/FanSelector.h includes/ControlCurve.h)
 include_directories(includes)
 add_library(fantune SHARED ${HEADERS} ${CPP_FILES})
 target_link_libraries(fantune sensors)
