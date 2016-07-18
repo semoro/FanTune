@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <Fan.h>
 #include "PlotPoint.h"
+#include "FanCurve.h"
 
 namespace Ui {
 class SettingsWidget;
@@ -21,10 +22,12 @@ class SettingsWidget : public QWidget
     QPointF cPos;
     QCustomPlot* customPlot;
     bool dragFlag = false;
+    FanCurve fanCurve;
 
     QColor defaultColor = Qt::lightGray,
     dragColor = Qt::red,
     graphColor = QColor(92, 170, 21);
+    double deadZone;
 
 
 public:
@@ -40,7 +43,7 @@ public slots:
 private:
     void initSettingsGraph();
     void initFanCurveGraph();
-    void getFanCurve();
+    void initSettingsCommonCode();
     Ui::SettingsWidget *ui;
 };
 

@@ -121,7 +121,7 @@
          <item>
           <widget class="QPushButton" name="pushButton_auto">
            <property name="text">
-            <string>Auto</string>
+            <string>Reset</string>
            </property>
           </widget>
          </item>
