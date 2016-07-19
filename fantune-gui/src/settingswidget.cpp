@@ -167,9 +167,13 @@ void SettingsWidget::initFanCurveGraph() {
 
     customPlot->addGraph();
     customPlot->graph(0)->setData(*x, *rpmP);
+    customPlot->graph(0)->setPen(QPen(QBrush(QColor(graphColor)), 3));
     customPlot->xAxis->setLabel("PWM");
+    customPlot->xAxis->setLabelColor(Qt::white);
     customPlot->yAxis->setLabel("RPM");
+    customPlot->yAxis->setLabelColor(Qt::white);
     customPlot->rescaleAxes();
+
 
     customPlot->xAxis->setBasePen(QPen(Qt::white, 1));
     customPlot->yAxis->setBasePen(QPen(Qt::white, 1));
@@ -201,7 +205,6 @@ void SettingsWidget::initFanCurveGraph() {
     axisRectGradient.setColorAt(0, QColor(80, 80, 80));
     axisRectGradient.setColorAt(1, QColor(30, 30, 30));
     customPlot->axisRect()->setBackground(axisRectGradient);
-
 }
 
 void SettingsWidget::initSettingsCommonCode() {
