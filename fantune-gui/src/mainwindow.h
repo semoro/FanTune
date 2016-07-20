@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QHBoxLayout>
+#include <boost/interprocess/mapped_region.hpp>
 #include "Fan.h"
 
 namespace Ui {
@@ -13,6 +14,7 @@ class MainWindow : public QMainWindow {
 Q_OBJECT
     QVector<Fan *> fans;
     QTimer *fanUpdate;
+    boost::interprocess::mapped_region *region;
 
 
 public:
