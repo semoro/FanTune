@@ -63,7 +63,7 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0">
-        <widget class="QCustomPlot" name="fanCurveDisplay" native="true">
+        <widget class="QCustomPlot" name="fanCurvePlot" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -91,7 +91,7 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
-        <widget class="QCustomPlot" name="controlCurveEdit" native="true">
+        <widget class="QCustomPlot" name="controlCurvePlot" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>

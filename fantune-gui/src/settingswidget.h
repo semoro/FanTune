@@ -20,7 +20,6 @@ class SettingsWidget : public QWidget
     PlotPoint* current;
     PlotPoint* currentState;
     QPointF cPos;
-    QCustomPlot* customPlot;
     bool dragFlag = false;
     FanCurve fanCurve;
 
@@ -41,9 +40,11 @@ public slots:
     void dragPointFlag(QMouseEvent *event);
     void dragPoint(QMouseEvent *event);
 private:
-    void initSettingsGraph();
-    void initFanCurveGraph();
-    void initSettingsCommonCode();
+    void initControlCurvePlot();
+    void initFanCurvePlot();
+    void initPlotStyle(QCustomPlot* customPlot);
+    void resetControlCurve();
+    void plotFanCurve();
     Ui::SettingsWidget *ui;
 };
 

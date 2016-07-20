@@ -8,7 +8,6 @@ SettingsWidget::SettingsWidget(QWidget *parent) :
         QWidget(parent),
         ui(new Ui::SettingsWidget) {
     ui->setupUi(this);
-
 }
 
 SettingsWidget::~SettingsWidget() {
@@ -22,23 +21,18 @@ SettingsWidget::SettingsWidget(Fan *fan, QWidget *parent) :
 
     setWindowTitle(fan->monitorPath);
 
-    initFanCurveGraph();
-    deadZone = fanCurve.deadZone() * 100;
-    initSettingsGraph();
+    initFanCurvePlot();
+    initControlCurvePlot();
+    //ui->tabWidget->widget(2)->setDisabled(true);
 
-    connect(customPlot, &QCustomPlot::mousePress, this, &SettingsWidget::dragPointFlag);
-    connect(customPlot, &QCustomPlot::mouseMove, this, &SettingsWidget::dragPoint);
-    connect(customPlot, &QCustomPlot::mouseRelease, [this]() {
-        dragFlag = false;
-        if (current)
-            current->setBrush(QBrush(defaultColor));
-        customPlot->replot();
-    });
+
+
     connect(ui->pushButton_addPoint, &QPushButton::clicked, this, &SettingsWidget::addPoint);
     connect(ui->cancel, &QPushButton::clicked, [this]() {
         close();
     });
     connect(ui->pushButton_auto, &QPushButton::clicked, this, &SettingsWidget::setGraphToAuto);
+    connect(ui->pushButton_fanTest, &QPushButton::clicked, this, &SettingsWidget::plotFanCurve);
 
 }
 
@@ -49,12 +43,12 @@ void SettingsWidget::addPoint() {
     pointsX->insert(2, 1, x);
     pointsY->insert(2, 1, y);
 
-    pointsMarks->insert(2, 1, new PlotPoint(customPlot));
+    pointsMarks->insert(2, 1, new PlotPoint(ui->controlCurvePlot));
     (*pointsMarks)[2]->moveCenter((*pointsX)[2], (*pointsY)[2]);
     (*pointsMarks)[2]->setBrush(QBrush(defaultColor));
 
-    customPlot->graph(0)->setData(*pointsX, *pointsY);
-    customPlot->replot();
+    ui->controlCurvePlot->graph(0)->setData(*pointsX, *pointsY);
+    ui->controlCurvePlot->replot();
 }
 
 void SettingsWidget::dragPointFlag(QMouseEvent *event) {
@@ -65,7 +59,7 @@ void SettingsWidget::dragPointFlag(QMouseEvent *event) {
                 if ((*pointsMarks)[i]->selectTest(event->localPos(), false) < 10) {
                     current = (*pointsMarks)[i];
                     current->setBrush(QBrush(dragColor));
-                    customPlot->replot();
+                    ui->controlCurvePlot->replot();
                     dragFlag = true;
                     (*currentState).setIndex(i);
                     //TODO Check point mark center position collision.
@@ -80,8 +74,8 @@ void SettingsWidget::dragPoint(QMouseEvent *event) {
     if (dragFlag) {
         double x, y, checkX, checkY, leftX = 0, rightX = 100;
         int i = (*currentState).index();
-        checkX = customPlot->xAxis->pixelToCoord(event->localPos().x());
-        checkY = customPlot->yAxis->pixelToCoord(event->localPos().y());
+        checkX = ui->controlCurvePlot->xAxis->pixelToCoord(event->localPos().x());
+        checkY = ui->controlCurvePlot->yAxis->pixelToCoord(event->localPos().y());
 
 
         if (i > 1) {
@@ -96,7 +90,7 @@ void SettingsWidget::dragPoint(QMouseEvent *event) {
         }
 
         if (checkX > leftX && checkX < rightX) {
-            x = customPlot->xAxis->pixelToCoord(event->localPos().x());
+            x = ui->controlCurvePlot->xAxis->pixelToCoord(event->localPos().x());
         }
 
 
@@ -107,7 +101,7 @@ void SettingsWidget::dragPoint(QMouseEvent *event) {
         } else if (i == 1 && deadZone > 1) {
             y = deadZone;
         } else if (checkY >= 0 && checkY <= 100) {
-            y = customPlot->yAxis->pixelToCoord(event->localPos().y());
+            y = ui->controlCurvePlot->yAxis->pixelToCoord(event->localPos().y());
         }
         cPos = QPointF(x, y);
         (*pointsX).replace(i, cPos.x());
@@ -126,8 +120,8 @@ void SettingsWidget::dragPoint(QMouseEvent *event) {
         }
 
 
-        customPlot->graph(0)->setData(*pointsX, *pointsY);
-        customPlot->replot();
+        ui->controlCurvePlot->graph(0)->setData(*pointsX, *pointsY);
+        ui->controlCurvePlot->replot();
     }
 }
 
@@ -139,75 +133,46 @@ void SettingsWidget::setGraphToAuto() {
         delete (*pointsMarks)[j];
     }
     delete pointsMarks;
-
-    initSettingsCommonCode();
-    customPlot->replot();
+    resetControlCurve();
+    ui->controlCurvePlot->replot();
 }
 
-void SettingsWidget::initSettingsGraph() {
-    customPlot = ui->controlCurveEdit;
-    currentState = new PlotPoint(customPlot);
-    initSettingsCommonCode();
+void SettingsWidget::initControlCurvePlot() {
+
+    currentState = new PlotPoint(ui->controlCurvePlot);
+
+    connect(ui->controlCurvePlot, &QCustomPlot::mousePress, this, &SettingsWidget::dragPointFlag);
+    connect(ui->controlCurvePlot, &QCustomPlot::mouseMove, this, &SettingsWidget::dragPoint);
+    connect(ui->controlCurvePlot, &QCustomPlot::mouseRelease, [this]() {
+        dragFlag = false;
+        if (current)
+            current->setBrush(QBrush(defaultColor));
+        ui->controlCurvePlot->replot();
+    });
+
+    ui->controlCurvePlot->xAxis->setLabel("°C");
+    ui->controlCurvePlot->xAxis->setLabelColor(Qt::white);
+    ui->controlCurvePlot->xAxis->setRange(0, 100);
+    ui->controlCurvePlot->yAxis->setLabel("%");
+    ui->controlCurvePlot->yAxis->setLabelColor(Qt::white);
+    ui->controlCurvePlot->yAxis->setRange(0, 100);
+    initPlotStyle(ui->controlCurvePlot);
+    resetControlCurve();
 }
 
-void SettingsWidget::initFanCurveGraph() {
-    QCustomPlot *customPlot = ui->fanCurveDisplay;
+void SettingsWidget::initFanCurvePlot() {
 
+    ui->fanCurvePlot->xAxis->setLabel("PWM");
+    ui->fanCurvePlot->xAxis->setLabelColor(Qt::white);
+    ui->fanCurvePlot->xAxis->setRange(0, 255);
 
-    std::fstream config("curve_outtake.conf", std::ios::in);
-    fanCurve.load(config);
-    config.close();
+    ui->fanCurvePlot->yAxis->setLabel("RPM");
+    ui->fanCurvePlot->yAxis->setLabelColor(Qt::white);
 
-    rpmP = new QVector<double>(256);
-    x = new QVector<double>(256);
-    for (int i = 0; i < 256; ++i) {
-        (*rpmP)[i] = fanCurve.rpmFromPwm(i);
-        (*x)[i] = i;
-    }
-
-    customPlot->addGraph();
-    customPlot->graph(0)->setData(*x, *rpmP);
-    customPlot->graph(0)->setPen(QPen(QBrush(QColor(graphColor)), 3));
-    customPlot->xAxis->setLabel("PWM");
-    customPlot->xAxis->setLabelColor(Qt::white);
-    customPlot->yAxis->setLabel("RPM");
-    customPlot->yAxis->setLabelColor(Qt::white);
-    customPlot->rescaleAxes();
-
-
-    customPlot->xAxis->setBasePen(QPen(Qt::white, 1));
-    customPlot->yAxis->setBasePen(QPen(Qt::white, 1));
-    customPlot->xAxis->setTickPen(QPen(Qt::white, 1));
-    customPlot->yAxis->setTickPen(QPen(Qt::white, 1));
-    customPlot->xAxis->setSubTickPen(QPen(Qt::white, 1));
-    customPlot->yAxis->setSubTickPen(QPen(Qt::white, 1));
-    customPlot->xAxis->setTickLabelColor(Qt::white);
-    customPlot->yAxis->setTickLabelColor(Qt::white);
-    customPlot->xAxis->grid()->setPen(QPen(QColor(140, 140, 140), 1, Qt::DotLine));
-    customPlot->yAxis->grid()->setPen(QPen(QColor(140, 140, 140), 1, Qt::DotLine));
-    customPlot->xAxis->grid()->setSubGridPen(QPen(QColor(80, 80, 80), 1, Qt::DotLine));
-    customPlot->yAxis->grid()->setSubGridPen(QPen(QColor(80, 80, 80), 1, Qt::DotLine));
-    customPlot->xAxis->grid()->setSubGridVisible(true);
-    customPlot->yAxis->grid()->setSubGridVisible(true);
-    customPlot->xAxis->grid()->setZeroLinePen(Qt::NoPen);
-    customPlot->yAxis->grid()->setZeroLinePen(Qt::NoPen);
-    customPlot->xAxis->setUpperEnding(QCPLineEnding::esSpikeArrow);
-    customPlot->yAxis->setUpperEnding(QCPLineEnding::esSpikeArrow);
-    QLinearGradient plotGradient;
-    plotGradient.setStart(0, 0);
-    plotGradient.setFinalStop(0, 350);
-    plotGradient.setColorAt(0, QColor(80, 80, 80));
-    plotGradient.setColorAt(1, QColor(50, 50, 50));
-    customPlot->setBackground(plotGradient);
-    QLinearGradient axisRectGradient;
-    axisRectGradient.setStart(0, 0);
-    axisRectGradient.setFinalStop(0, 350);
-    axisRectGradient.setColorAt(0, QColor(80, 80, 80));
-    axisRectGradient.setColorAt(1, QColor(30, 30, 30));
-    customPlot->axisRect()->setBackground(axisRectGradient);
+    initPlotStyle(ui->fanCurvePlot);
 }
 
-void SettingsWidget::initSettingsCommonCode() {
+void SettingsWidget::resetControlCurve() {
     pointsX = new QVector<double>(4);
     pointsY = new QVector<double>(4);
     pointsMarks = new QVector<PlotPoint *>(4);
@@ -222,25 +187,41 @@ void SettingsWidget::initSettingsCommonCode() {
     (*pointsY)[2] = 50;
     (*pointsY)[3] = 100;
 
-
-    customPlot->addGraph();
-    customPlot->graph(0)->setData(*pointsX, *pointsY);
-    customPlot->graph(0)->setPen(QPen(QBrush(QColor(graphColor)), 3));
+    ui->controlCurvePlot->addGraph();
+    ui->controlCurvePlot->graph(0)->setData(*pointsX, *pointsY);
+    ui->controlCurvePlot->graph(0)->setPen(QPen(QBrush(QColor(graphColor)), 3));
 
     for (int i = 0; i < (*pointsX).size(); ++i) {
-        (*pointsMarks)[i] = new PlotPoint(customPlot);
+        (*pointsMarks)[i] = new PlotPoint(ui->controlCurvePlot);
         (*pointsMarks)[i]->moveCenter((*pointsX)[i], (*pointsY)[i]);
         (*pointsMarks)[i]->setBrush(QBrush(defaultColor));
     }
+}
 
-    customPlot->xAxis->setLabel("°C");
-    customPlot->xAxis->setLabelColor(Qt::white);
-    customPlot->xAxis->setRange(0, 100);
-    customPlot->yAxis->setLabel("%");
-    customPlot->yAxis->setLabelColor(Qt::white);
-    customPlot->yAxis->setRange(0, 100);
+void SettingsWidget::plotFanCurve() {
 
 
+    std::fstream config("curve_outtake.conf", std::ios::in);
+    fanCurve.load(config);
+    config.close();
+
+    rpmP = new QVector<double>(256);
+    x = new QVector<double>(256);
+    for (int i = 0; i < 256; ++i) {
+        (*rpmP)[i] = fanCurve.rpmFromPwm(i);
+        (*x)[i] = i;
+    }
+
+    ui->fanCurvePlot->addGraph();
+    ui->fanCurvePlot->graph(0)->setData(*x, *rpmP);
+    ui->fanCurvePlot->graph(0)->setPen(QPen(QBrush(QColor(graphColor)), 3));
+    ui->fanCurvePlot->rescaleAxes();
+    ui->fanCurvePlot->replot();
+    deadZone = fanCurve.deadZone() * 100;
+
+}
+
+void SettingsWidget::initPlotStyle(QCustomPlot *customPlot) {
     customPlot->xAxis->setBasePen(QPen(Qt::white, 1));
     customPlot->yAxis->setBasePen(QPen(Qt::white, 1));
     customPlot->xAxis->setTickPen(QPen(Qt::white, 1));
@@ -272,6 +253,10 @@ void SettingsWidget::initSettingsCommonCode() {
     axisRectGradient.setColorAt(1, QColor(30, 30, 30));
     customPlot->axisRect()->setBackground(axisRectGradient);
 }
+
+
+
+
 
 
 

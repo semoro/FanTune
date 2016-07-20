@@ -29,14 +29,11 @@ void FanPreview::openSettings() {
 }
 
 void FanPreview::toggleSwitch() {
-
     if(ui->horizontalSlider->value() == 0) {
         ui->horizontalSlider->setValue(1);
-
     }
     else {
         ui->horizontalSlider->setValue(0);
-
     }
 }
 
